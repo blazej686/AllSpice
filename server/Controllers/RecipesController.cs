@@ -9,11 +9,13 @@ namespace AllSpice.Controllers
     {
         private readonly RecipesService _recipesService;
         private readonly Auth0Provider _auth0Provider;
+        private readonly IngredientsService _ingredientsService;
 
-        public RecipesController(RecipesService recipesService, Auth0Provider auth0Provider)
+        public RecipesController(RecipesService recipesService, Auth0Provider auth0Provider, IngredientsService ingredientsService)
         {
             _recipesService = recipesService;
             _auth0Provider = auth0Provider;
+            _ingredientsService = ingredientsService;
         }
 
         [Authorize]
@@ -99,5 +101,24 @@ namespace AllSpice.Controllers
                 return BadRequest(err.Message);
             }
         }
+        [HttpGet("{recipeId}/ingredients")]
+
+        public ActionResult<Recipe> GetIngredientsByRecipeId(int recipeId)
+        {
+            try
+            {
+                List<Ingredient> ingredients = _ingredientsService.GetIngredientsByRecipeId(recipeId);
+
+
+                return Ok(ingredients);
+            }
+            catch (Exception err)
+            {
+
+                return BadRequest(err.Message);
+            }
+        }
     }
+
+
 }

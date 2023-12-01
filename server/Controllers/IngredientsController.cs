@@ -21,9 +21,27 @@ namespace AllSpice.Controllers
             try
             {
                 Account userInfo = await _auth0Provider.GetUserInfoAsync<Account>(HttpContext);
-                ingredientData.creatorId = userInfo.Id;
+                ingredientData.CreatorId = userInfo.Id;
                 Ingredient ingredient = _ingredientsService.CreateIngredient(ingredientData);
                 return Ok(ingredient);
+            }
+            catch (Exception err)
+            {
+
+                return BadRequest(err.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpDelete("{ingredientId}")]
+        public async Task<ActionResult<string>> DestroyIngredient(int ingredientId)
+        {
+            try
+            {
+                Account userInfo = await _auth0Provider.GetUserInfoAsync<Account>(HttpContext);
+                string userId = userInfo.Id;
+                string message = _ingredientsService.DestroyIngredient(ingredientId, userId);
+                return Ok(message);
             }
             catch (Exception err)
             {

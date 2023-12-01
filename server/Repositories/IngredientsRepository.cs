@@ -1,6 +1,4 @@
 
-
-
 namespace AllSpice.Repositories;
 
 public class IngredientsRepository
@@ -33,5 +31,35 @@ WHERE ing.id = LAST_INSERT_ID();";
         },
         ingredientData).FirstOrDefault();
         return ingredient;
+    }
+
+    internal void DestroyIngredient(int ingredientId)
+    {
+        string sql = "DELETE FROM ingredients WHERE id = @ingredientId";
+        _db.Execute(sql, new { ingredientId });
+    }
+
+    internal Ingredient GetIngredientById(int ingredientId)
+    {
+        string sql = @"
+SELECT
+*
+FROM ingredients ing
+WHERE ing.id = @ingredientID
+;";
+
+        Ingredient ingredient = _db.Query<Ingredient>(sql, new { ingredientId }).FirstOrDefault();
+        return ingredient;
+    }
+
+    internal List<Ingredient> GetIngredientsByRecipeId(int recipeId)
+    {
+        string sql = @"
+SELECT
+*
+FROM ingredients ing
+WHERE ing.recipeId = @recipeId;";
+        List<Ingredient> ingredients = _db.Query<Ingredient>(sql, new { recipeId }).ToList();
+        return ingredients;
     }
 }
