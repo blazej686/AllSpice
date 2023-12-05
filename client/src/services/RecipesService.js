@@ -9,5 +9,12 @@ class RecipesService {
         const recipes = res.data.map(recipe => new Recipe(recipe))
         AppState.recipes = recipes
     }
+
+    async setActive(recipeId) {
+        const res = await api.get(`api/recipes/${recipeId}`)
+        const recipeData = new Recipe(res.data)
+        AppState.activeRecipe = recipeData
+
+    }
 }
 export const recipesService = new RecipesService()
