@@ -12,6 +12,11 @@
         <p class="m-0 p-2 glass-box">Favorites</p>
       </div>
     </section>
+    <!-- 
+    <button @click="changeType('')" class='btn btn-outline-dark my-1 p-1'>all</button>
+          <button @click="changeType(type)" v-for="type in types" :key="type" class='btn btn-outline-dark my-1 p-1'>
+            {{ type }}
+          </button> -->
 
     <section class="row">
       <div class="col-4  p-5" v-for="recipe in  recipes " :key="recipe.id">
@@ -21,8 +26,8 @@
           data-bs-target="#staticBackdrop" type="button"
           :style="{ backgroundImage: `url('${recipe.img}')`, backgroundSize: 'cover', backgroundPosition: 'center', height: '30dvh' }">
           <div class="text-end">
-            <i v-if="!recipe.favorites" class="mdi mdi-heart-outline glass-box"></i>
-            <i v-else class="mdi mdi-heart color-danger glass-box"></i>
+            <i v-if="isFav" class="mdi mdi-heart color-danger glass-box"></i>
+            <i v-else class="mdi mdi-heart-outline glass-box"></i>
           </div>
           <div>
             <p class="category-tag p-1">
@@ -46,34 +51,49 @@ import { AppState } from '../AppState.js';
 import { recipesService } from '../services/RecipesService.js';
 
 export default {
-  setup() {
-
+  setup(recipe) {
+    // const filteredType = ref("all");
     onMounted(() => {
       getRecipes();
     });
-
     async function getRecipes() {
       try {
         await recipesService.getRecipes();
-      } catch (error) {
-        Pop.error(error)
+      }
+      catch (error) {
+        Pop.error(error);
       }
     }
-
-
     return {
+      // filteredType,
       recipes: computed(() => AppState.recipes),
-
+      favorites: computed(() => AppState.favorites),
+      isFav: computed(() => {
+        const foundFav = AppState.favorites.find(favorite => favorite.favoriteId == recipe.id);
+        if (!foundFav) {
+          return false;
+        }
+        return true;
+      }),
+      filteredRecipes: computed(() => {
+        if (filteredRecipes.value) {
+          return AppState.recipes.filter((recipe) => recipe.creatorId == account.id);
+        }
+        else if (filteredRecipes.value == "favorites") {
+          return AppState.favorites;
+        }
+        else
+          return AppState.recipes;
+      }),
       async setActive(recipeId) {
         try {
-
-          await recipesService.setActive(recipeId)
-
-        } catch (error) {
-          Pop.error(error)
+          await recipesService.setActive(recipeId);
+        }
+        catch (error) {
+          Pop.error(error);
         }
       }
-    }
+    };
   },
 }
 </script>

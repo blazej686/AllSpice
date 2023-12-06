@@ -13,6 +13,10 @@
         </div>
         <div class="dropdown-menu dropdown-menu-lg-end dropdown-menu-start p-0" aria-labelledby="authDropdown">
           <div class="list-group">
+            <div class="list-group-item dropdown-item list-group-item-action selectable" data-bs-toggle="modal"
+              data-bs-target="#createRecipeModal">
+              Create Recipe
+            </div>
             <router-link :to="{ name: 'Account' }">
               <div class="list-group-item dropdown-item list-group-item-action">
                 Manage Account

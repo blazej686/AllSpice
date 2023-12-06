@@ -6,7 +6,6 @@
 
                 <div class="modal-body ">
                     <div class="text-end">
-
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div v-if="recipe" class="container-fluid">
@@ -15,25 +14,43 @@
                                 <img class="img-fluid recipe" :src="recipe.img" alt="Recipe Image">
                             </div>
                             <div class="col-8">
-                                <section class="row">
+                                <section class="row justify-content-around">
                                     <div class="col-12 d-flex justify-content-between">
                                         <h3>
                                             {{ recipe.title }}
                                         </h3>
                                         <p class="category-tag m-0 p-1">
                                             {{ recipe.category }}
-
                                         </p>
                                     </div>
-                                    <div class="col-6">
-                                        {{ recipe.instructions }}
+                                    <div class="col-5 shadow p-0">
+                                        <h4 class="bg-success rounded-top m-0">Recipe Instructions</h4>
+                                        <div class="bg-primary rounded-bottom">
+                                            {{ recipe.instructions }}
+                                        </div>
                                     </div>
-                                    <div class="col-6">
-                                        {{ recipe.ingredients }}
+                                    <div class="col-5 shadow p-0">
+                                        <h4 class="bg-success m-0">Recipe Ingredients</h4>
+                                        <div v-for="ingredient in ingredients" :key="ingredient.id" class="bg-primary">
+                                            {{ ingredient.quantity + ' ' + ingredient.name }}
+                                        </div>
+                                    </div>
+                                    <div class="col-12 d-flex justify-content-around mt-2 ">
+                                        <div>
+                                            <button class="btn btn-outline-success">Edit Instructions</button>
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-outline-success">Edit Recipe</button>
+                                            <div v-if="recipe.creatorId == account.id" class="text-end my-2">
+                                                <button class="btn btn-outline-danger"><i class="mdi mdi-delete"></i>Delete
+                                                    Recipe</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </section>
                             </div>
                         </section>
+
                     </div>
                 </div>
 
@@ -46,12 +63,13 @@
 <script>
 import { AppState } from '../AppState';
 import { computed, reactive, onMounted } from 'vue';
-import { Recipe } from '../models/Recipe.js';
 export default {
-    props: { recipe: { type: Recipe, required: true } },
     setup() {
         return {
-            recipe: computed(() => AppState.activeRecipe)
+            recipe: computed(() => AppState.activeRecipe),
+            ingredients: computed(() => AppState.activeIngredients),
+            account: computed(() => AppState.account),
+
         }
     }
 };
